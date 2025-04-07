@@ -2,11 +2,30 @@ import { User } from "@/types/AuthTypes"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, UserCircle, Shield, Key } from "lucide-react"
+import { UpdateUserModal } from "./UpdateUserModal"
+import { ConfirmDeleteUserModal } from "./ConfirmDeleteUserModal"
+import { useNavigate } from "react-router-dom"
 
-export default function UserDetails({user}: {user: User}) {
+export default function UserDetails({ user, updateCallback }: { user: User, updateCallback: () => void }) {
+    const navigate = useNavigate()
+    const deleteCallback = () => {
+        navigate('/admin/')
+    }
     return (
         <div className="container mx-auto p-6 space-y-6">
             {/* User Information Section */}
+            <div className="w-full grid grid-cols-3 items-center">
+                <div></div>
+                <h1 className="text-center text-2xl">
+                    User details of <strong>{user.username}</strong>
+                </h1>
+                <div className="flex justify-end gap-2">
+                    <UpdateUserModal user={user} updateCallback={updateCallback} />
+                    <ConfirmDeleteUserModal user={user} deleteCallback={deleteCallback}/>
+                </div>
+            </div>
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center space-x-4 pb-2">
@@ -36,7 +55,7 @@ export default function UserDetails({user}: {user: User}) {
                         <CardTitle className="text-lg">Status</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <Badge variant={user.active ? 'success' : 'secondary'}>
+                        <Badge variant={user.active ? 'default' : 'secondary'}>
                             {user.active ? 'ACTIVE' : 'INACTIVE'}
                         </Badge>
                     </CardContent>

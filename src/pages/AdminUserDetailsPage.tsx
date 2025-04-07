@@ -2,7 +2,6 @@ import UserDetails from "@/components/admin/UserDetails"
 import SpinnerFullScreen from "@/components/ui/spinnerFullScreen"
 import { User } from "@/types/AuthTypes"
 import { GetUserById } from "@/utils/api"
-import { Divide } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
@@ -38,7 +37,7 @@ export default function AdminUserDetailsPage() {
 
     return (
         <>
-        {!loading && user && !error && <UserDetails user={user}/>}
+        {!loading && user && !error && <UserDetails user={user} updateCallback={fetchUser}/>}
         {error && <div>{error}</div>}
         {loading && <SpinnerFullScreen/>}
         </>
