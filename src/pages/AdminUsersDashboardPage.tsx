@@ -69,11 +69,11 @@ export default function AdminUsersDashboardPage() {
                     </TableHeader>
                     <TableBody>
                         {users && users.map((user: User) => (
-                            <TableRow key={user.id} className="cursor-pointer" onClick={() => navigate(`/admin/user/${user.id}`)}>
-                                <TableCell>{user.username}</TableCell>
-                                <TableCell>{user.role}</TableCell>
-                                <TableCell>{user.password}</TableCell>
-                                <TableCell>
+                            <TableRow key={user.id} className="cursor-pointer">
+                                <TableCell onClick={() => navigate(`/admin/user/${user.id}`)}>{user.username}</TableCell>
+                                <TableCell onClick={() => navigate(`/admin/user/${user.id}`)}>{user.role}</TableCell>
+                                <TableCell onClick={() => navigate(`/admin/user/${user.id}`)}>{user.password}</TableCell>
+                                <TableCell onClick={() => navigate(`/admin/user/${user.id}`)}>
                                     <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
                                         user.active 
                                             ? 'bg-green-100 text-green-700'
