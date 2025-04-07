@@ -9,5 +9,7 @@ export type User = {
     active: boolean|undefined,
     password: string,
     role: "admin" | "guest",
-    Videos: null
+    Videos: null,
+    createdAt: Date,
+    updatedAt: Date,
 }
