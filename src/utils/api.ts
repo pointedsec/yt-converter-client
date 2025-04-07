@@ -30,6 +30,7 @@ export async function Login({ username, password }: { username: string; password
     } as ErrorType
 }
 
+// Get the current user from the JWT token
 export async function GetUser(){
     const token = getStorage("token")
     if (!token){
@@ -183,4 +184,29 @@ export async function UpdateUser({user}: {user: User}){
     return {
         message: response.data.message,
     }
+}
+
+export async function GetUserById(id: string){
+    const token = getStorage("token")
+    if (!token){
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    } 
+    const response = await axios({
+        method: "GET",
+        url: API_URL + "users/" + id, 
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token, 
+        }
+    })
+    if (response.status!== 200){
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType 
+    }
+    return response.data as User
 }
