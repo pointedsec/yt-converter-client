@@ -13,5 +13,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/login" replace />;
   }
 
+  if (user.active === false) {
+    return <Navigate to="/" replace />; 
+  }
+
   return <>{children}</>; // Asegura que se rendericen correctamente los hijos
 }
