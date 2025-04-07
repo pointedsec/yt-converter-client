@@ -2,8 +2,8 @@ import { getStorageTheme, setStorage } from "@/lib/storage";
 import { UseUserStore } from "@/store/userStore";
 import { useState, useEffect } from "react";
 import { HiSun, HiMoon } from "react-icons/hi";
-import AdminButtons from "../navbar/adminButtons";
-import GuestButtons from "../navbar/guestButtons";
+import AdminButtons from "../navbar/AdminButtons";
+import GuestButtons from "../navbar/GuestButtons";
 import { Link } from "react-router-dom";
 import LogoutButton from "../auth/LogoutButton";
 
@@ -11,14 +11,14 @@ export default function Navbar() {
     const [theme, setTheme] = useState<"light" | "dark">(getStorageTheme() || "light");
     const user = UseUserStore((state) => state.user);
 
-    // Cambiar el tema cuando el usuario presiona el botón
+    // Change theme  when users press button (theme state changes)
     useEffect(() => {
         setStorage("theme", theme);
         document.documentElement.classList.toggle("dark", theme === "dark");
     }, [theme]);
 
     return (
-        <nav className="flex items-center justify-between px-6 py-4 shadow-md sticky top-0">
+        <nav className="flex items-center justify-between px-6 py-4 shadow-md sticky top-0 bg-background z-50">
             <Link to="/">
                 <h1 className="text-xl font-bold cursor-pointer">
                     YT-API-CLIENT

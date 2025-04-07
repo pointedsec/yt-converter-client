@@ -15,8 +15,7 @@ export async function Login({ username, password }: { username: string; password
         data: {
             username,
             password,
-        },
-        validateStatus: () => true,
+        }
     });
 
     if (response.status === 200){
@@ -45,6 +44,12 @@ export async function GetUser(){
             "Authorization": "Bearer " + token,
         },
     })
+    if (response.status !== 200){
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
     const data = await response.data
     return {
         id: data.User.id,
@@ -55,4 +60,29 @@ export async function GetUser(){
         Videos: data.Videos
 
     } as User
+}
+
+export async function GetUsers(){
+    const token = getStorage("token")
+    if (!token){
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "GET",
+        url: API_URL + "users", 
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token, 
+        }
+    })
+    if (response.status !== 200){
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType 
+    }
+    return response.data as User[]
 }
