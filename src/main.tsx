@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LoginPage from './pages/LoginPage.tsx'
 import MainLayout from './layouts/MainLayout.tsx'
 import ProtectedRoute from './services/ProtectedRoute.tsx'
+import AdminUsersDashboardPage from './pages/AdminUsersDashboardPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -19,9 +20,16 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <MainLayout>
+    element:
       <LoginPage />
+  },
+  {
+    path: '/admin',
+    element: <ProtectedRoute>
+    <MainLayout>
+      <AdminUsersDashboardPage />
     </MainLayout>
+  </ProtectedRoute>
   }
 ])
 
