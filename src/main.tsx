@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage.tsx'
 import MainLayout from './layouts/MainLayout.tsx'
 import ProtectedRoute from './services/ProtectedRoute.tsx'
 import AdminUsersDashboardPage from './pages/AdminUsersDashboardPage.tsx'
+import AdminUserDetailsPage from './pages/AdminUserDetailsPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,14 @@ const router = createBrowserRouter([
     element: <ProtectedRoute>
     <MainLayout>
       <AdminUsersDashboardPage />
+    </MainLayout>
+  </ProtectedRoute>
+  },
+  {
+    path: '/admin/user/:id',
+    element: <ProtectedRoute>
+    <MainLayout>
+      <AdminUserDetailsPage />
     </MainLayout>
   </ProtectedRoute>
   }

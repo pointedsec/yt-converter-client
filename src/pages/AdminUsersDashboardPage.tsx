@@ -13,11 +13,13 @@ import {
 import { User } from "@/types/AuthTypes"
 import { GetUsers } from "@/utils/api"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function AdminUsersDashboardPage() {
     const [users, setUsers] = useState<User[] | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const navigate = useNavigate()
 
     const fetchUsers = async () => {
         try {
@@ -67,7 +69,7 @@ export default function AdminUsersDashboardPage() {
                     </TableHeader>
                     <TableBody>
                         {users && users.map((user: User) => (
-                            <TableRow key={user.id}>
+                            <TableRow key={user.id} className="cursor-pointer" onClick={() => navigate(`/admin/user/${user.id}`)}>
                                 <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>{user.password}</TableCell>
