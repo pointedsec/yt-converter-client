@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button"
+import { ConfirmDeleteUserModal } from "@/components/admin/ConfirmDeleteUserModal"
+import { CreateUserModal } from "@/components/admin/CreateUserModal"
+import { UpdateUserModal } from "@/components/admin/UpdateUserModal"
 import SpinnerFullScreen from "@/components/ui/spinnerFullScreen"
 import {
   Table,
@@ -10,7 +12,6 @@ import {
 } from "@/components/ui/table"
 import { User } from "@/types/AuthTypes"
 import { GetUsers } from "@/utils/api"
-import { PlusCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export default function AdminUsersDashboardPage() {
@@ -50,10 +51,7 @@ export default function AdminUsersDashboardPage() {
         <div className="container mx-auto py-8">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-                <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add New User
-                </Button>
+                <CreateUserModal createCallback={fetchUsers}/>
             </div>
 
             <div className="rounded-md border">
@@ -83,12 +81,10 @@ export default function AdminUsersDashboardPage() {
                                     </span>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="outline" size="sm" className="mr-2">
-                                        Edit
-                                    </Button>
-                                    <Button variant="destructive" size="sm">
-                                        Delete
-                                    </Button>
+                                   <div className="flex gap-2 text-right justify-end items-end">
+                                   <ConfirmDeleteUserModal user={user} deleteCallback={fetchUsers}/>
+                                   <UpdateUserModal user={user} updateCallback={fetchUsers}/>
+                                   </div>
                                 </TableCell>
                             </TableRow>
                         ))}
