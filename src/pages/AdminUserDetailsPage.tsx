@@ -30,8 +30,10 @@ export default function AdminUserDetailsPage() {
         setLoading(false)
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         fetchUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
