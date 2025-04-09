@@ -1,15 +1,42 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Heart, Github } from "lucide-react"
 
 export default function Footer() {
   return (
-    <Card className="w-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 py-6 px-4 text-center">
-      <div className="flex flex-col items-center">
-        <div className="bg-gray-900 rounded-2xl mb-4">
-            <img src="/logo.png" alt="Logo" width={200} height={200} className="mb-2" />
+    <Card className="mt-auto border-t">
+      <div className="container mx-auto py-6">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="flex items-center space-x-2">
+            <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+            <span className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              YT-API-CLIENT
+            </span>
+          </div>
+          
+          <Separator className="w-[60%]" />
+          
+          <div className="flex flex-col items-center space-y-2">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} YT-API-CLIENT. All rights reserved.
+            </p>
+            <div className="flex items-center space-x-1 text-sm">
+              <span>Developed with</span>
+              <Heart className="h-4 w-4 text-red-500 fill-red-500 animate-pulse" />
+              <span>by</span>
+              <a 
+                href="https://github.com/pointedsec" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center hover:text-primary transition-colors"
+              >
+                pointedsec
+                <Github className="h-4 w-4 ml-1" />
+              </a>
+            </div>
+          </div>
         </div>
-        <p className="text-sm">© {new Date().getFullYear()} YT-API-CLIENT. Todos los derechos reservados.</p>
-        <p className="text-sm">Developed with ❤️ by <a href="https://github.com/pointedsec" target="_blank" className="underline">pointedsec</a></p>
       </div>
     </Card>
-  );
+  )
 }
