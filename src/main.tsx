@@ -7,6 +7,9 @@ import MainLayout from './layouts/MainLayout.tsx'
 import ProtectedRoute from './services/ProtectedRoute.tsx'
 import AdminUsersDashboardPage from './pages/AdminUsersDashboardPage.tsx'
 import AdminUserDetailsPage from './pages/AdminUserDetailsPage.tsx'
+import ProtectedAdminRoute from './services/ProtectedAdminRoute.tsx'
+import NotFound from './pages/404.tsx'
+import ConvertPage from './pages/ConvertPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -26,19 +29,31 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <ProtectedRoute>
+    element: <ProtectedAdminRoute>
     <MainLayout>
       <AdminUsersDashboardPage />
     </MainLayout>
-  </ProtectedRoute>
+  </ProtectedAdminRoute>
   },
   {
     path: '/admin/user/:id',
-    element: <ProtectedRoute>
+    element: <ProtectedAdminRoute>
     <MainLayout>
       <AdminUserDetailsPage />
     </MainLayout>
-  </ProtectedRoute>
+  </ProtectedAdminRoute>
+  },
+  {
+    path: '/convert',
+    element: <ProtectedRoute>
+      <MainLayout>
+        <ConvertPage/>
+      </MainLayout>
+    </ProtectedRoute>
+  },
+  {
+    path: '*',
+    element: <NotFound/> 
   }
 ])
 
