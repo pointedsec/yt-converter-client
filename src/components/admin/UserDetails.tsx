@@ -68,7 +68,39 @@ export default function UserDetails({ user, updateCallback }: { user: User, upda
                     </CardHeader>
                     <CardContent>
                         <p className="text-sm text-muted-foreground">
-                            {new Date(user.createdAt).toLocaleDateString('en-US', {
+                            {new Date(user.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                        <CalendarDays className="w-6 h-6 text-primary" />
+                        <CardTitle className="text-lg">Updated At</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">
+                            {new Date(user.updated_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                        <CalendarDays className="w-6 h-6 text-primary" />
+                        <CardTitle className="text-lg">Last Login At</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">
+                            {new Date(user.last_login_at).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric'
