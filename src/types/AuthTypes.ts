@@ -10,6 +10,7 @@ export type User = {
     password: string,
     role: "admin" | "guest",
     Videos: null,
-    createdAt: Date,
-    updatedAt: Date,
+    created_at: Date,
+    updated_at: Date,
+    last_login_at: Date
 }
