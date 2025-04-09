@@ -2,6 +2,7 @@ import { getStorage, setStorage } from "@/lib/storage";
 import Navbar from "../components/global/Navbar";
 import { useEffect } from "react";
 import Footer from "@/components/global/Footer";
+import { Toaster } from "@/components/ui/sonner"
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -11,9 +12,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   }, [])
     return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-all">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-all flex flex-col">
       <Navbar />
-      <main className="p-6 w-full h-screen">{children}</main>
+      <main className="flex-1 p-6 w-full">{children}</main>
+      <Toaster/>
       <Footer />
     </div>
   );
