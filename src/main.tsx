@@ -11,6 +11,8 @@ import ProtectedAdminRoute from './services/ProtectedAdminRoute.tsx'
 import NotFound from './pages/404.tsx'
 import ConvertPage from './pages/ConvertPage.tsx'
 import AdminVideoDetailsPage from './pages/AdminVideoDetailsPage.tsx'
+import AdminVideos from './pages/AdminVideos.tsx'
+import RecentQueries from './pages/RecentQueries.tsx'
 
 const router = createBrowserRouter([
   {
@@ -53,10 +55,26 @@ const router = createBrowserRouter([
     </ProtectedAdminRoute>
   },
   {
+    path: '/admin/videos',
+    element: <ProtectedAdminRoute>
+      <MainLayout>
+        <AdminVideos/>
+      </MainLayout>
+    </ProtectedAdminRoute>
+  },
+  {
     path: '/convert',
     element: <ProtectedRoute>
       <MainLayout>
         <ConvertPage/>
+      </MainLayout>
+    </ProtectedRoute>
+  },
+  {
+    path: '/recent',
+    element: <ProtectedRoute>
+      <MainLayout>
+        <RecentQueries/>
       </MainLayout>
     </ProtectedRoute>
   },
