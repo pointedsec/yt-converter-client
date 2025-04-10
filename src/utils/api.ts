@@ -452,6 +452,58 @@ export async function GetVideosByUserId(userID: string){
             statusCode: response.status,
         } as ErrorType
     }
+    return response.data as Video[]
+}
+
+export async function DeleteVideoById(videoID: string){
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "DELETE",
+        url: API_URL + "videos/" + videoID,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
+    return {
+        message: response.data.message
+    }
+}
+
+export async function GetVideos(){
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "GET",
+        url: API_URL + "videos/",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
     console.log(response.data)
     return response.data as Video[]
 }
