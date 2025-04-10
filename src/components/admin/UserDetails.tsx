@@ -5,12 +5,29 @@ import { CalendarDays, UserCircle, Shield, Key } from "lucide-react"
 import { UpdateUserModal } from "./UpdateUserModal"
 import { ConfirmDeleteUserModal } from "./ConfirmDeleteUserModal"
 import { useNavigate } from "react-router-dom"
+import { GetVideosByUserId } from "@/utils/api"
+import { useEffect, useState } from "react"
+import { Video } from "@/types/VideoTypes"
+import ConvertedVideoDetails from "./ConvertedVideosDetails"
 
 export default function UserDetails({ user, updateCallback }: { user: User, updateCallback: () => void }) {
+    const [videos, setVideos] = useState<Video[]|null>(null)
+    const [videoError, setVideoError] = useState(false)
     const navigate = useNavigate()
     const deleteCallback = () => {
         navigate('/admin/')
     }
+    useEffect(() => {
+        const getVideos = async () => {
+            const reqVideos = await GetVideosByUserId(user.id)
+            if ('error' in reqVideos){
+                setVideoError(true)
+                return
+            }
+            setVideos(reqVideos)
+        }
+        getVideos()
+    }, [user.id])
     return (
         <div className="container mx-auto p-6 space-y-6">
             {/* User Information Section */}
@@ -117,7 +134,7 @@ export default function UserDetails({ user, updateCallback }: { user: User, upda
                 </CardHeader>
                 <CardContent>
                     <div className="min-h-[200px] flex items-center justify-center text-muted-foreground">
-                        <p>Videos section coming soon...</p>
+                        {videoError? 'Error loading videos' : videos?.length === 0? 'No videos found' : <ConvertedVideoDetails videos={videos}/>}
                     </div>
                 </CardContent>
             </Card>
