@@ -388,3 +388,44 @@ export async function GetVideoProcessingStatus(videoID: string) {
     }
     return response.data as ProcessingStatus[]
 }
+
+export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4"|null, resolution:string){
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+
+    const queryResolution = format === "MP3" ? "mp3" : resolution;
+    
+    const response = await axios({
+        method: "GET",
+        url: `${API_URL}videos/${videoID}/download?resolution=${queryResolution}`,
+        headers: {
+            "Authorization": "Bearer " + token,
+        },
+        responseType: 'blob'
+    });
+
+    if (response.status !== 200) {
+        return {
+            error: "Download failed",
+            statusCode: response.status,
+        } as ErrorType
+    }
+
+    // Create download link, a little bit messy, I know
+    const blob = new Blob([response.data]);
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `video.${format?.toLowerCase()}`; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(downloadUrl);
+
+    return { success: true };
+}
