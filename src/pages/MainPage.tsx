@@ -119,7 +119,7 @@ export default function MainPage() {
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            Need help? Check out our <Button variant="link" className="p-0">documentation</Button> or{" "}
+            Need help? Check out our <a href='https://github.com/pointedsec/yt-converter-api/blob/main/README.md' target='_blank'><Button variant="link" className="p-0 cursor-pointer">documentation</Button></a> or{" "}
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button variant="link" className="p-0">contact the developer</Button>
