@@ -19,7 +19,7 @@ export default function AdminVideos() {
     useEffect(() => {
         const fetchVideos = async () => {
             const response = await GetVideos();
-            if ('error' in response) {
+            if (response && 'error' in response) {
                 toast.error("Failed to fetch videos");
                 return;
             }
