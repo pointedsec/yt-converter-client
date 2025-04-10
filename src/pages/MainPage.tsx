@@ -65,9 +65,11 @@ export default function MainPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="mt-auto">
-            <Button className="w-full cursor-pointer" variant="secondary">
-              View History
-            </Button>
+            <Link to='/recent'>
+              <Button className="w-full cursor-pointer" variant="secondary">
+                View History
+              </Button>
+            </Link>
           </CardContent>
         </Card>
 
@@ -80,9 +82,11 @@ export default function MainPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="mt-auto">
-            <Button className="w-full cursor-pointer" variant="outline">
-              Browse Videos
-            </Button>
+            <Link to='/converted-history'>
+              <Button className="w-full cursor-pointer" variant="outline">
+                Browse Videos
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
