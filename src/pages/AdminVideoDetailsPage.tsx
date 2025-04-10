@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetVideoByID, GetVideoProcessingStatus } from "@/utils/api";
+import { GetUserById, GetVideoByID, GetVideoProcessingStatus } from "@/utils/api";
 import { ProcessingStatus, Video } from "@/types/VideoTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DownloadProcessedVideo } from "@/utils/api";
+import DeleteVideoButton from "@/components/admin/DeleteVideoButton";
+import { User } from "@/types/AuthTypes";
+import { Link } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 
 export default function AdminVideoDetailsPage() {
     const { videoId } = useParams();
@@ -15,6 +19,7 @@ export default function AdminVideoDetailsPage() {
     const [processingStatus, setProcessingStatus] = useState<ProcessingStatus[]>([]);
     const [loading, setLoading] = useState(true);
     const [downloadingId, setDownloadingId] = useState<number | null>(null);
+    const [user, setUser] = useState<User|null>(null);
 
     const handleDownload = async (status: ProcessingStatus) => {
         setDownloadingId(status.id);
@@ -31,22 +36,28 @@ export default function AdminVideoDetailsPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(videoId)
             if (!videoId) return;
 
             const videoData = await GetVideoByID(videoId);
-            console.log(videoData)
             if (videoData && 'error' in videoData) {
                 toast.error("Failed to fetch video details");
                 return;
             }
             setVideo(videoData);
 
+            // Fetch user data
+            if (videoData?.user_id) {
+                const userData = await GetUserById(videoData.user_id.toString());
+                if (!('error' in userData)) {
+                    setUser(userData);
+                }
+            }
+
             const statusData = await GetVideoProcessingStatus(videoId);
-            console.log(statusData)
             if (!('error' in statusData)) {
                 setProcessingStatus(statusData);
             }
+
             setLoading(false);
         };
 
@@ -68,8 +79,11 @@ export default function AdminVideoDetailsPage() {
     return (
         <div className="space-y-6">
             <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Video Details</CardTitle>
+                    <DeleteVideoButton
+                        video={video} 
+                    />
                 </CardHeader>
                 <CardContent className="flex flex-col md:flex-row gap-6">
                     <div className="w-full md:w-1/3">
@@ -95,8 +109,22 @@ export default function AdminVideoDetailsPage() {
                                     <TableCell className="font-mono">{video.video_id}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell className="font-medium">User ID</TableCell>
-                                    <TableCell>{video.user_id}</TableCell>
+                                    <TableCell className="font-medium">User requested</TableCell>
+                                    <TableCell className="flex items-center gap-2">
+                                        {user?.username || video.user_id}
+                                        {user && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                asChild
+                                            >
+                                                <Link to={`/admin/user/${video.user_id}`}>
+                                                    <ExternalLink className="h-4 w-4 mr-2" />
+                                                    View User
+                                                </Link>
+                                            </Button>
+                                        )}
+                                    </TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell className="font-medium">Requested By IP</TableCell>
