@@ -5,7 +5,7 @@ import { HiSun, HiMoon } from "react-icons/hi";
 import AdminButtons from "../navbar/AdminButtons";
 import GuestButtons from "../navbar/GuestButtons";
 import { Link } from "react-router-dom";
-import LogoutButton from "../auth/LogoutButton";
+import ProfileButton from "../navbar/ProfileButton";
 
 export default function Navbar() {
     const [theme, setTheme] = useState<"light" | "dark">(getStorageTheme() || "light");
@@ -24,8 +24,15 @@ export default function Navbar() {
                     YT-API-CLIENT
                 </h1>
             </Link>
-            {user && user.role === "admin" && <AdminButtons />}
-            {user && user.role === "guest" && <GuestButtons />}
+            <div className="flex gap-2">
+                {user && user.role === "admin" && (
+                    <>
+                        <AdminButtons />
+                        <GuestButtons />
+                    </>
+                )}
+                {user && user.role === "guest" && <GuestButtons />}
+            </div>
             <div className="flex items-center justify-center gap-4">
                 <button
                     onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -33,7 +40,7 @@ export default function Navbar() {
                 >
                     {theme === "light" ? <HiSun size={24} /> : <HiMoon size={24} />}
                 </button>
-                <LogoutButton />
+                <ProfileButton user={user}/>
             </div>
         </nav>
     );
