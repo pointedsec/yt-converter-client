@@ -429,3 +429,29 @@ export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4
 
     return { success: true };
 }
+
+export async function GetVideosByUserId(userID: string){
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "GET",
+        url: API_URL + "users/" + userID + "/videos",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
+    console.log(response.data)
+    return response.data as Video[]
+}
