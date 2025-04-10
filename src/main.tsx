@@ -13,6 +13,7 @@ import ConvertPage from './pages/ConvertPage.tsx'
 import AdminVideoDetailsPage from './pages/AdminVideoDetailsPage.tsx'
 import AdminVideos from './pages/AdminVideos.tsx'
 import RecentQueries from './pages/RecentQueries.tsx'
+import ConvertedHistory from './pages/ConvertedHistory.tsx'
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,14 @@ const router = createBrowserRouter([
     element: <ProtectedRoute>
       <MainLayout>
         <ConvertPage/>
+      </MainLayout>
+    </ProtectedRoute>
+  },
+  {
+    path: '/converted-history',
+    element: <ProtectedRoute>
+      <MainLayout>
+        <ConvertedHistory/>
       </MainLayout>
     </ProtectedRoute>
   },
