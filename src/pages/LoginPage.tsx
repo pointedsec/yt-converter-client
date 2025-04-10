@@ -11,7 +11,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col h-screen items-center justify-center w-full">
       <h1 className="text-2xl font-bold text-slate-800 mb-4">Login Page - YT Converter Client</h1>
-      <div className="max-w-lg min-w-lg">
+      <div className="max-w-lg lg:min-w-lg">
         <LoginForm />
       </div>
     { user && <SpinnerFullScreen/>}
