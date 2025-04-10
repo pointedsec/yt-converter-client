@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
+import DeleteVideoButton from "./DeleteVideoButton";
 
 export default function ConvertedVideoDetails({videos}: {videos: Video[]|null}) {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function ConvertedVideoDetails({videos}: {videos: Video[]|null}) 
     }
 
     return (
-        <Card>
+        <Card className="max-w-full">
             <CardHeader>
                 <CardTitle>Converted Videos</CardTitle>
             </CardHeader>
@@ -47,7 +48,7 @@ export default function ConvertedVideoDetails({videos}: {videos: Video[]|null}) 
                                 <TableCell className="font-mono text-sm">{video.requested_by_ip}</TableCell>
                                 <TableCell>{new Date(video.created_at).toLocaleString()}</TableCell>
                                 <TableCell>{new Date(video.updated_at).toLocaleString()}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right space-x-2">
                                     <Button
                                         variant="outline"
                                         size="sm"
@@ -57,6 +58,7 @@ export default function ConvertedVideoDetails({videos}: {videos: Video[]|null}) 
                                         <Eye className="h-4 w-4 mr-2" />
                                         View Details
                                     </Button>
+                                    <DeleteVideoButton video={video} />
                                 </TableCell>
                             </TableRow>
                         ))}
