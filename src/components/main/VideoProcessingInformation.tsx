@@ -5,14 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function VideoProcessingInformation({video, resolution, callback}: {video: Video, resolution: string, callback: (str: string|null) => void}) {
+export default function VideoProcessingInformation({video, resolution, callback, format}: {video: Video, resolution: string, callback: (str: string|null) => void, format: "MP3"|"MP4"|null}) {
     const [currentStatus, setCurrentStatus] = useState<"processing"|"completed"|"failed"|null>(null);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
     const checkStatus = async () => {
         const status = await GetVideoProcessingStatus(video.video_id);
+        console.log(status)
         if (!('error' in status)) {
-            const currentProcessing = status.find(s => s.resolution === resolution);
+            const currentProcessing = format === 'MP4' ? status.find(s => s.resolution === resolution) : status.find(s => s.resolution === format?.toLowerCase());
             if (currentProcessing) {
                 setCurrentStatus(currentProcessing.status as "processing"|"completed"|"failed");
                 if (currentProcessing.status === "completed") {
