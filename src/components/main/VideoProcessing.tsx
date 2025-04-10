@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { Loader2, Music, Video as VideoIcon } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { GetVideoResolutions, ProcessVideoMP3, ProcessVideoMP4 } from "@/utils/api"
+import { DownloadProcessedVideo, GetVideoResolutions, ProcessVideoMP3, ProcessVideoMP4 } from "@/utils/api"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import VideoProcessingInformation from "./VideoProcessingInformation"
@@ -41,26 +41,26 @@ export default function VideoProcessing({ video }: { video: Video }) {
     const handleConvert = async () => {
         setIsConverting(true);
         if (selectedFormat === "MP3") {
-           const response = await ProcessVideoMP3(video.video_id)
-           if ('error' in response) {
-               toast.error(response.message)
-               return;
-           }
-           setProcessing(true)
-           toast.success(response.message)
+            const response = await ProcessVideoMP3(video.video_id)
+            if ('error' in response) {
+                toast.error(response.message)
+                return;
+            }
+            setProcessing(true)
+            toast.success(response.message)
         } else if (selectedFormat === "MP4") {
             const response = await ProcessVideoMP4(video.video_id, selectedResolution)
             if ('error' in response) {
                 toast.error(response.message)
                 return;
             }
-            toast.success(response.message) 
+            toast.success(response.message)
             setProcessing(true)
         }
         setIsConverting(false);
     };
 
-    const finishedProcessing = (status: string|null) => {
+    const finishedProcessing = (status: string | null) => {
         setProcessing(false)
         console.log(status)
         if (!status) {
@@ -76,32 +76,34 @@ export default function VideoProcessing({ video }: { video: Video }) {
                 <CardTitle>Convert Options</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="space-y-4">
-                    <Label>Select Format</Label>
-                    <div className="flex gap-4">
-                        <Button
-                            variant={selectedFormat === "MP3" ? "default" : "outline"}
-                            className="w-32 flex gap-2"
-                            onClick={() => {
-                                setSelectedFormat("MP3");
-                                setSelectedResolution("");
-                            }}
-                        >
-                            <Music className="h-4 w-4" />
-                            MP3
-                        </Button>
-                        <Button
-                            variant={selectedFormat === "MP4" ? "default" : "outline"}
-                            className="w-32 flex gap-2"
-                            onClick={() => setSelectedFormat("MP4")}
-                        >
-                            <VideoIcon className="h-4 w-4" />
-                            MP4
-                        </Button>
+                {status === "" &&
+                    <div className="space-y-4">
+                        <Label>Select Format</Label>
+                        <div className="flex gap-4">
+                            <Button
+                                variant={selectedFormat === "MP3" ? "default" : "outline"}
+                                className="w-32 flex gap-2"
+                                onClick={() => {
+                                    setSelectedFormat("MP3");
+                                    setSelectedResolution("");
+                                }}
+                            >
+                                <Music className="h-4 w-4" />
+                                MP3
+                            </Button>
+                            <Button
+                                variant={selectedFormat === "MP4" ? "default" : "outline"}
+                                className="w-32 flex gap-2"
+                                onClick={() => setSelectedFormat("MP4")}
+                            >
+                                <VideoIcon className="h-4 w-4" />
+                                MP4
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                }
 
-                {selectedFormat === "MP4" && (
+                {selectedFormat === "MP4" && status === "" && (
                     <div className="space-y-4">
                         <Label>Select Resolution</Label>
                         <RadioGroup
@@ -112,7 +114,7 @@ export default function VideoProcessing({ video }: { video: Video }) {
                             {isLoadingResolutions && (
                                 <div className="col-span-2 flex items-center space-x-2 gap-2">
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    Loading available resolutions... 
+                                    Loading available resolutions...
                                 </div>
                             )}
                             {resolutions.map((resolution) => (
@@ -128,7 +130,7 @@ export default function VideoProcessing({ video }: { video: Video }) {
                     </div>
                 )}
 
-                {selectedFormat && (
+                {selectedFormat && status === "" && (
                     <Button
                         className="w-full"
                         disabled={isConverting || (selectedFormat === "MP4" && !selectedResolution)}
@@ -145,12 +147,18 @@ export default function VideoProcessing({ video }: { video: Video }) {
                     </Button>
                 )}
 
-                {processing && status === "" && <VideoProcessingInformation video={video} callback={finishedProcessing} resolution={selectedResolution}/>}
-                
+                {selectedFormat && status !== "" && (
+                    <Button className="w-full" onClick={() => location.reload()}>
+                        Convert another video!
+                    </Button>
+                )}
+
+                {processing && status === "" && <VideoProcessingInformation video={video} callback={finishedProcessing} resolution={selectedResolution} format={selectedFormat} />}
+
                 {status === "failed" && (
                     <div className="flex flex-col items-center gap-4 mt-4">
                         <p className="text-destructive">Processing failed. Would you like to try again?</p>
-                        <Button 
+                        <Button
                             variant="destructive"
                             onClick={() => {
                                 setStatus("");
@@ -168,11 +176,15 @@ export default function VideoProcessing({ video }: { video: Video }) {
                 {status === "completed" && (
                     <div className="flex flex-col items-center gap-4 mt-4">
                         <p className="text-green-600 dark:text-green-400">Processing completed successfully!</p>
-                        <Button 
+                        <Button
                             variant="default"
-                            onClick={() => {
-                                // Mock download for now
-                                toast.success("Download started!");
+                            onClick={async () => {
+                                const download = await DownloadProcessedVideo(video.video_id, selectedFormat, selectedResolution)
+                                if (download) {
+                                    toast.success("Download started!");
+                                } else {
+                                    toast.error("There was an error creating your download link!")
+                                }
                             }}
                             className="w-full sm:w-auto"
                         >
