@@ -13,6 +13,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Link } from "react-router-dom";
 
 export default function ConvertedHistory() {
     const user = UseUserStore((state) => state.user);
@@ -22,7 +23,10 @@ export default function ConvertedHistory() {
 
     useEffect(() => {
         const fetchProcessingStatuses = async () => {
-            if (!user?.Videos) return;
+            if (!user?.Videos){
+                setLoading(false);
+                return;
+            }
             
             const statusMap = new Map<string, ProcessingStatus[]>();
             for (const video of user.Videos) {
@@ -49,6 +53,25 @@ export default function ConvertedHistory() {
         return (
             <div className="flex justify-center items-center h-[calc(100vh-200px)]">
                 <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
+
+    if (!user?.Videos || user.Videos.length === 0) {
+        return (
+            <div className="container mx-auto p-6">
+                <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] space-y-4">
+                    <VideoIcon className="h-16 w-16 text-muted-foreground" />
+                    <h2 className="text-2xl font-semibold text-center">No Videos Found</h2>
+                    <p className="text-muted-foreground text-center max-w-md">
+                        You haven't converted any videos yet. Head to the converter to start processing your first video!
+                    </p>
+                    <Button asChild>
+                        <Link to="/convert">
+                            Convert Your First Video
+                        </Link>
+                    </Button>
+                </div>
             </div>
         );
     }
