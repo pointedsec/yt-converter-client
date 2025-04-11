@@ -1,7 +1,5 @@
-import { getStorageTheme, setStorage } from "@/lib/storage";
 import { UseUserStore } from "@/store/userStore";
-import { useState, useEffect } from "react";
-import { HiSun, HiMoon } from "react-icons/hi";
+import { useState } from "react";
 import AdminButtons from "../navbar/AdminButtons";
 import GuestButtons from "../navbar/GuestButtons";
 import { Link } from "react-router-dom";
@@ -9,22 +7,17 @@ import ProfileButton from "../navbar/ProfileButton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import ChangeThemeButton from "../ui/change-theme-button";
 
 export default function Navbar() {
-    const [theme, setTheme] = useState<"light" | "dark">(getStorageTheme() || "light");
     const [isOpen, setIsOpen] = useState(false);
     const user = UseUserStore((state) => state.user);
-
-    useEffect(() => {
-        setStorage("theme", theme);
-        document.documentElement.classList.toggle("dark", theme === "dark");
-    }, [theme]);
 
     return (
         <nav className="flex items-center justify-between px-6 py-4 shadow-md sticky top-0 bg-background z-50">
             <Link to="/">
                 <h1 className="text-xl font-bold cursor-pointer">
-                    YT Converter
+                    MediaFlow
                 </h1>
             </Link>
 
@@ -40,23 +33,13 @@ export default function Navbar() {
             </div>
 
             <div className="hidden lg:flex items-center justify-center gap-4">
-                <button
-                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                    className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-all hover:bg-gray-300 dark:hover:bg-gray-700"
-                >
-                    {theme === "light" ? <HiSun size={24} /> : <HiMoon size={24} />}
-                </button>
+                <ChangeThemeButton/>
                 <ProfileButton user={user}/>
             </div>
 
             {/* Mobile Navigation */}
             <div className="lg:hidden flex items-center gap-2">
-                <button
-                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                    className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-all hover:bg-gray-300 dark:hover:bg-gray-700"
-                >
-                    {theme === "light" ? <HiSun size={20} /> : <HiMoon size={20} />}
-                </button>
+                <ChangeThemeButton/>
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
                         <Button variant="outline" size="icon">
