@@ -85,4 +85,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
+# License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
 <p style="text-align:center;">Made with ❤️ by pointedsec</p>
