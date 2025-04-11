@@ -25,7 +25,7 @@
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pointedsec/mediaflow.git
+git clone https://github.com/pointedsec/yt-converter-client.git
 ```
 
 2. Navigate to the project directory:
