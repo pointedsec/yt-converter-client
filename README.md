@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/logo.png" alt="MediaFlow Logo" width="300" />
+  <img src="./public/favicon.png" alt="MediaFlow Logo" width="100" />
   <h1>MediaFlow</h1>
   <p>A modern YouTube media converter with support for MP3 and MP4 formats</p>
 </div>
@@ -25,7 +25,7 @@
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pointedsec/mediaflow.git
+git clone https://github.com/pointedsec/yt-converter-client.git
 ```
 
 2. Navigate to the project directory:
@@ -38,7 +38,7 @@ cd mediaflow
 pnpm install
 ```
 
-4. Create a `.env` file in the root directory:
+4. Create a `.env` file in the root directory: (You need to first setup the [yt-converter-api](https://github.com/pointedsec/yt-converter-api) API)
 ```bash
 VITE_API_URL=http://localhost:3000
 ```
