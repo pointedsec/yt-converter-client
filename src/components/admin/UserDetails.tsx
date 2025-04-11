@@ -31,8 +31,8 @@ export default function UserDetails({ user, updateCallback }: { user: User, upda
     return (
         <div className="container mx-auto p-6 space-y-6">
             {/* User Information Section */}
-            <div className="w-full grid grid-cols-3 items-center">
-                <div></div>
+            <div className="w-full flex flex-col gap-4 md:grid md:grid-cols-3 items-center">
+                <div className="hidden md:flex"></div>
                 <h1 className="text-center text-2xl">
                     User details of <strong>{user.username}</strong>
                 </h1>
