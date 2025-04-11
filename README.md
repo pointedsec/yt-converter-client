@@ -48,7 +48,7 @@ VITE_API_URL=http://localhost:3000
 pnpm run dev
 ```
 
-6. Open your browser and visit `Open your browser and visit `URL_ADDRESS:5173`
+6. Open your browser and visit `Open your browser and visit URL_ADDRESS:5173`
 
 7. Enjoy!
 
