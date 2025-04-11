@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { GetUser, Login } from "@/utils/api";
+import { CheckApiStatus, GetUser, Login } from "@/utils/api";
 import { LoginResponse } from "../../types/AuthTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ErrorType } from "../../types/Error";
 import ErrorAlert from "../global/ErrorAlert"
 import { Loader } from "lucide-react";
@@ -24,6 +24,7 @@ export default function LoginForm() {
   const setUser = UseUserStore((state) => state.setUser);
   const [error, setError] = useState<ErrorType | null>(null)
   const [loading, setLoading] = useState(false)
+  const [isApiAvailable, setIsApiAvailable] = useState(true)
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -49,13 +50,24 @@ export default function LoginForm() {
       // Redirect to home page
       window.location.href = "/"
       setLoading(false) // If the redirect doesn't works
+      return
     }
     // Clean form
     setError(response as ErrorType)
-    console.log(response as ErrorType)
     form.reset()
     setLoading(false)
   }
+
+  useEffect(() => {
+      async function checkApi() {
+        const response = await CheckApiStatus()
+        if (!response.active) {
+          setIsApiAvailable(false) 
+          setError({error: "API is not available: " + response.error as string, statusCode: 500})
+        }
+      }
+      checkApi()
+  }, [])
 
   return (
     <>
@@ -69,7 +81,7 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="admin" {...field} />
+                  <Input placeholder="admin" {...field} disabled={!isApiAvailable} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,7 +94,7 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
+                  <Input type="password" placeholder="password" {...field} disabled={!isApiAvailable}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
