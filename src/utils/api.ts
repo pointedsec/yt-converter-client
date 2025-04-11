@@ -279,7 +279,7 @@ export async function GetVideoByID(videoID: string | null) {
     return response.data as Video
 }
 
-export async function GetVideoResolutions(videoID: string){
+export async function GetVideoResolutions(videoID: string) {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -319,18 +319,18 @@ export async function ProcessVideoMP3(videoID: string) {
         url: API_URL + "videos/" + videoID + "/process",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token, 
-        }  ,
+            "Authorization": "Bearer " + token,
+        },
         data: {
             Resolution: "any",
-            IsAudio: true 
+            IsAudio: true
         }
     })
-    if (response.status!== 200) {
+    if (response.status !== 200) {
         return {
             error: response.data.error,
             statusCode: response.status,
-        } as ErrorType 
+        } as ErrorType
     }
     return response.data
 }
@@ -348,18 +348,18 @@ export async function ProcessVideoMP4(videoID: string, resolution: string) {
         url: API_URL + "videos/" + videoID + "/process",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token, 
-        }  ,
+            "Authorization": "Bearer " + token,
+        },
         data: {
             Resolution: resolution,
-            IsAudio: false 
+            IsAudio: false
         }
     })
-    if (response.status!== 200) {
+    if (response.status !== 200) {
         return {
             error: response.data.error,
             statusCode: response.status,
-        } as ErrorType 
+        } as ErrorType
     }
     return response.data
 }
@@ -374,22 +374,22 @@ export async function GetVideoProcessingStatus(videoID: string) {
     }
     const response = await axios({
         method: "GET",
-        url: API_URL + "videos/" + videoID + "/status", 
+        url: API_URL + "videos/" + videoID + "/status",
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token,
         }
     })
-    if (response.status!== 200) {
+    if (response.status !== 200) {
         return {
             error: response.data.error,
             statusCode: response.status,
-        } as ErrorType 
+        } as ErrorType
     }
     return response.data as ProcessingStatus[]
 }
 
-export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4"|null, resolution:string){
+export async function DownloadProcessedVideo(videoID: string, format: "MP3" | "MP4" | null, resolution: string) {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -399,7 +399,7 @@ export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4
     }
 
     const queryResolution = format === "MP3" ? "mp3" : resolution;
-    
+
     const response = await axios({
         method: "GET",
         url: `${API_URL}videos/${videoID}/download?resolution=${queryResolution}`,
@@ -421,7 +421,7 @@ export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = `video.${format?.toLowerCase()}`; 
+    link.download = `video.${format?.toLowerCase()}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -430,7 +430,7 @@ export async function DownloadProcessedVideo(videoID: string, format: "MP3"|"MP4
     return { success: true };
 }
 
-export async function GetVideosByUserId(userID: string){
+export async function GetVideosByUserId(userID: string) {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -455,7 +455,7 @@ export async function GetVideosByUserId(userID: string){
     return response.data as Video[]
 }
 
-export async function DeleteVideoById(videoID: string){
+export async function DeleteVideoById(videoID: string) {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -482,7 +482,7 @@ export async function DeleteVideoById(videoID: string){
     }
 }
 
-export async function GetVideos(){
+export async function GetVideos() {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -506,4 +506,25 @@ export async function GetVideos(){
     }
     console.log(response.data)
     return response.data as Video[]
+}
+
+export async function CheckApiStatus() {
+    try {
+        const response = await fetch(API_URL + "status");
+        if (response.ok) {
+            return {
+                active: true
+            }
+        } else {
+            return {
+                active: false
+            }
+        }
+    } catch(e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : "API not available";
+        return {
+            active: false,
+            error: errorMessage
+        }
+    }
 }
