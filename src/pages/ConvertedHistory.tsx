@@ -2,18 +2,23 @@ import { UseUserStore } from "@/store/userStore";
 import { GetVideoProcessingStatus, DownloadProcessedVideo } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { ProcessingStatus, Video } from "@/types/VideoTypes";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2, Music, Video as VideoIcon } from "lucide-react";
+import { Download, Loader2, Music, Video as VideoIcon, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function ConvertedHistory() {
     const user = UseUserStore((state) => state.user);
@@ -77,75 +82,107 @@ export default function ConvertedHistory() {
     }
 
     return (
-        <div className="container mx-auto p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Converted Videos History</h1>
-                <Badge variant="outline" className="text-sm">
-                    Total Videos: {user?.Videos?.length || 0}
-                </Badge>
+        <div className="container mx-auto p-4 md:p-6 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl md:text-3xl font-bold">Media Library</h1>
+                    <p className="text-muted-foreground">Manage your converted videos</p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-sm">
+                        {user?.Videos?.length || 0} Videos
+                    </Badge>
+                    <Button asChild variant="outline" size="sm">
+                        <Link to="/convert">New Conversion</Link>
+                    </Button>
+                </div>
             </div>
 
             <ScrollArea className="h-[calc(100vh-200px)]">
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
                     {user?.Videos?.map((video: Video) => (
                         <Card key={video.id} className="overflow-hidden">
-                            <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                                <CardTitle className="line-clamp-1">{video.title}</CardTitle>
-                                <Badge variant="outline">
-                                    {videoStatuses.get(video.video_id)?.length || 0} Conversions
-                                </Badge>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex gap-4">
+                            <CardHeader className="p-0">
+                                <div className="relative">
                                     <img 
-                                        src={`https://img.youtube.com/vi/${video.video_id}/mqdefault.jpg`}
+                                        src={`https://img.youtube.com/vi/${video.video_id}/maxresdefault.jpg`}
                                         alt={video.title}
-                                        className="w-48 rounded-md shadow-md"
+                                        className="w-full h-48 object-cover"
                                     />
-                                    <Accordion type="single" collapsible className="w-full">
-                                        <AccordionItem value="processing-status">
-                                            <AccordionTrigger>Processing Status</AccordionTrigger>
-                                            <AccordionContent>
-                                                <div className="space-y-2">
-                                                    {videoStatuses.get(video.video_id)?.map((status) => (
-                                                        <div key={status.id} 
-                                                            className="flex items-center justify-between p-2 rounded-lg border bg-card">
-                                                            <div className="flex items-center gap-2">
-                                                                {status.resolution === "MP3" ? 
-                                                                    <Music className="h-4 w-4" /> : 
-                                                                    <VideoIcon className="h-4 w-4" />
-                                                                }
-                                                                <span className="font-medium">
-                                                                    {status.resolution}
-                                                                </span>
-                                                                <Badge 
-                                                                    variant={status.status === "completed" ? "default" : "secondary"}
-                                                                    className="ml-2"
-                                                                >
-                                                                    {status.status}
-                                                                </Badge>
-                                                            </div>
-                                                            {status.status === "completed" && (
-                                                                <Button
-                                                                    variant="outline"
-                                                                    size="sm"
-                                                                    onClick={() => handleDownload(status)}
-                                                                    disabled={downloading === status.id}
-                                                                >
-                                                                    {downloading === status.id ? (
-                                                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                                                    ) : (
-                                                                        <Download className="h-4 w-4 mr-2" />
-                                                                    )}
-                                                                    Download
-                                                                </Button>
-                                                            )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <div className="absolute bottom-0 p-4 text-white">
+                                        <CardTitle className="line-clamp-1 text-lg md:text-xl">
+                                            {video.title}
+                                        </CardTitle>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-4">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <Calendar className="h-4 w-4" />
+                                            <span>{new Date(video.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                        <Badge variant="secondary">
+                                            {videoStatuses.get(video.video_id)?.length || 0} Formats
+                                        </Badge>
+                                    </div>
+                                    
+                                    <Separator />
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        {videoStatuses.get(video.video_id)?.map((status) => (
+                                            <HoverCard key={status.id}>
+                                                <HoverCardTrigger asChild>
+                                                    <div className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent transition-colors cursor-pointer">
+                                                        <div className="flex items-center gap-2">
+                                                            {status.resolution === "MP3" ? 
+                                                                <Music className="h-4 w-4" /> : 
+                                                                <VideoIcon className="h-4 w-4" />
+                                                            }
+                                                            <span className="font-medium">
+                                                                {status.resolution}
+                                                            </span>
+                                                            <Badge 
+                                                                variant={status.status === "completed" ? "default" : "secondary"}
+                                                                className="ml-2"
+                                                            >
+                                                                {status.status}
+                                                            </Badge>
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    </Accordion>
+                                                        {status.status === "completed" && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => handleDownload(status)}
+                                                                disabled={downloading === status.id}
+                                                            >
+                                                                {downloading === status.id ? (
+                                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                                ) : (
+                                                                    <Download className="h-4 w-4" />
+                                                                )}
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent className="w-80">
+                                                    <div className="flex justify-between space-x-4">
+                                                        <div className="space-y-1">
+                                                            <h4 className="text-sm font-semibold">Format Details</h4>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Type: {status.resolution === "MP3" ? "Audio" : "Video"}
+                                                            </p>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Quality: {status.resolution}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        ))}
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
