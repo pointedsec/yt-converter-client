@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/favicon.png" alt="MediaFlow Logo" width="50" />
+  <img src="./public/favicon.png" alt="MediaFlow Logo" width="100" />
   <h1>MediaFlow</h1>
   <p>A modern YouTube media converter with support for MP3 and MP4 formats</p>
 </div>
