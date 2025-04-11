@@ -38,7 +38,7 @@ cd mediaflow
 pnpm install
 ```
 
-4. Create a `.env` file in the root directory:
+4. Create a `.env` file in the root directory: (You need to first setup the [yt-converter-api](https://github.com/pointedsec/yt-converter-api) API)
 ```bash
 VITE_API_URL=http://localhost:3000
 ```
