@@ -62,8 +62,6 @@ The application requires the following environment variables:
 - Build for production: ```pnpm run build```
 - Preview production build: ```pnpm run preview```
 
-# 📱 Screenshots
-
 # 🔐 Security
 - JWT-based authentication
 - Role-based access control
