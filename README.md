@@ -30,7 +30,7 @@ git clone https://github.com/pointedsec/yt-converter-client.git
 
 2. Navigate to the project directory:
 ```bash
-cd mediaflow
+cd yt-converter-api
 ```
 
 3. Install dependencies:
