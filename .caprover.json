@@ -1,0 +1,4 @@
+{
+  "appName": "yt-client",
+  "dockerfilePath": "./Dockerfile"
+}

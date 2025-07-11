@@ -14,6 +14,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 # Copy project files
+COPY .env.production .env.production
 COPY . .
 
 # Build the application
