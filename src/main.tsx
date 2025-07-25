@@ -14,6 +14,7 @@ import AdminVideoDetailsPage from './pages/AdminVideoDetailsPage.tsx'
 import AdminVideos from './pages/AdminVideos.tsx'
 import RecentQueries from './pages/RecentQueries.tsx'
 import ConvertedHistory from './pages/ConvertedHistory.tsx'
+import AdminUploadCookiePage from './pages/AdminUploadCookie.tsx'
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
     element: <ProtectedAdminRoute>
     <MainLayout>
       <AdminUserDetailsPage />
+    </MainLayout>
+  </ProtectedAdminRoute>
+  },
+  {
+    path: '/admin/cookies/',
+    element: <ProtectedAdminRoute>
+    <MainLayout>
+      <AdminUploadCookiePage />
     </MainLayout>
   </ProtectedAdminRoute>
   },

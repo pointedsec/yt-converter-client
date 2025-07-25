@@ -3,6 +3,7 @@ import { ErrorType } from "../types/Error"
 import { LoginResponse, User } from "@/types/AuthTypes";
 import { getStorage } from "@/lib/storage";
 import { InsertedVideoType, ProcessingStatus, Video } from "@/types/VideoTypes";
+import { CookieStatusType } from "@/types/CookiesTypes";
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -527,4 +528,29 @@ export async function CheckApiStatus() {
             error: errorMessage
         }
     }
+}
+
+export async function CheckCookiesFile(){
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "GET",
+        url: API_URL + "cookies",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
+    return response.data as CookieStatusType
 }

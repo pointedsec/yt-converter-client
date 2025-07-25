@@ -10,6 +10,9 @@ export default function AdminButtons() {
             <Link to="/admin/videos">
                 <Button variant="outline" className="cursor-pointer">Videos Dashboard</Button>
             </Link>
+            <Link to="/admin/cookies">
+                <Button variant="outline" className="cursor-pointer">Handle Cookies File</Button>
+            </Link>
         </>
     )
 }
