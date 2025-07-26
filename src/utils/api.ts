@@ -521,7 +521,7 @@ export async function CheckApiStatus() {
                 active: false
             }
         }
-    } catch(e: unknown) {
+    } catch (e: unknown) {
         const errorMessage = e instanceof Error ? e.message : "API not available";
         return {
             active: false,
@@ -530,7 +530,7 @@ export async function CheckApiStatus() {
     }
 }
 
-export async function CheckCookiesFile(){
+export async function CheckCookiesFile() {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -553,4 +553,60 @@ export async function CheckCookiesFile(){
         } as ErrorType
     }
     return response.data as CookieStatusType
+}
+
+export async function DeleteCookiesFile() {
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+    const response = await axios({
+        method: "DELETE",
+        url: API_URL + "cookies",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
+    return response.data as {
+        message: string
+    }
+}
+
+export async function UploadCookiesFile(file: File[]) {
+    const token = getStorage("token")
+    if (!token) {
+        return {
+            error: "No token found",
+            statusCode: 401,
+        } as ErrorType
+    }
+
+    const formData = new FormData();
+    formData.append("cookies", file[0]);
+
+    const response = await axios.post(API_URL + "cookies", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            "Authorization": "Bearer " + token,
+        }
+    })
+    if (response.status !== 200) {
+        return {
+            error: response.data.error,
+            statusCode: response.status,
+        } as ErrorType
+    }
+    return response.data as {
+        message: string
+    }
 }
