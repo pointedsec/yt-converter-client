@@ -161,7 +161,7 @@ export default function VideoProcessing({ video }: { video: Video }) {
                         <Button
                             variant="destructive"
                             onClick={() => {
-                                window.location.reload()
+                                location.reload()
                             }}
                             className="w-full sm:w-auto"
                         >
