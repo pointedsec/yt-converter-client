@@ -280,63 +280,103 @@ export async function GetVideoByID(videoID: string | null) {
     return response.data as Video
 }
 
-export async function GetVideoResolutions(videoID: string) {
+export async function GetVideoResolutions(videoID: string, cookiesFile?: File) {
     const token = getStorage("token")
     if (!token) {
-        return {
-            error: "No token found",
-            statusCode: 401,
-        } as ErrorType
+      return {
+        error: "No token found",
+        statusCode: 401,
+      } as ErrorType
     }
-    const response = await axios({
-        method: "GET",
-        url: API_URL + "videos/" + videoID + "/formats",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
+  
+    if (cookiesFile) {
+      // Crear FormData y anexar el archivo cookies
+      const formData = new FormData()
+      formData.append("cookies", cookiesFile)
+  
+      const response = await axios.post(
+        API_URL + "videos/" + videoID + "/formats",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + token,
+          },
         }
-    })
-
-    if (response.status !== 200) {
+      )
+  
+      if (response.status !== 200) {
         return {
-            error: response.data.error,
-            statusCode: response.status,
+          error: response.data.error,
+          statusCode: response.status,
         } as ErrorType
-    }
-
-    return response.data
-}
-
-export async function ProcessVideoMP3(videoID: string) {
-    const token = getStorage("token")
-    if (!token) {
-        return {
-            error: "No token found",
-            statusCode: 401,
-        } as ErrorType
-    }
-    const response = await axios({
-        method: "POST",
-        url: API_URL + "videos/" + videoID + "/process",
+      }
+      return response.data
+    } else {
+      // No hay archivo cookies, mandar GET sin body ni Content-Type
+      const response = await axios.get(API_URL + "videos/" + videoID + "/formats", {
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
+          Authorization: "Bearer " + token,
         },
-        data: {
-            Resolution: "any",
-            IsAudio: true
-        }
-    })
-    if (response.status !== 200) {
+      })
+  
+      if (response.status !== 200) {
         return {
-            error: response.data.error,
-            statusCode: response.status,
+          error: response.data.error,
+          statusCode: response.status,
         } as ErrorType
+      }
+      return response.data
     }
-    return response.data
-}
+  }
+  
 
-export async function ProcessVideoMP4(videoID: string, resolution: string) {
+export async function ProcessVideoMP3(videoID: string, cookiesFile?: File) {
+    const token = getStorage("token")
+    if (!token) {
+      return {
+        error: "No token found",
+        statusCode: 401,
+      } as ErrorType
+    }
+  
+    const formData = new FormData()
+    formData.append("Resolution", "any")
+    formData.append("IsAudio", "true")
+    if (cookiesFile) {
+      formData.append("cookies", cookiesFile)
+    }
+  
+    try {
+      const response = await axios.post(
+        `${API_URL}videos/${videoID}/process`,
+        formData,
+        {
+          headers: {
+            "Authorization": "Bearer " + token,
+          },
+        }
+      )
+  
+      if (response.status !== 200) {
+        return {
+          error: response.data.error,
+          statusCode: response.status,
+        } as ErrorType
+      }
+  
+      return response.data
+  
+    } catch (err: any) {
+      return {
+        error: err.response?.data?.error || "Unknown error",
+        statusCode: err.response?.status || 500,
+      } as ErrorType
+    }
+  }
+  
+
+  export async function ProcessVideoMP4(videoID: string, resolution: string, cookiesFile?: File) {
     const token = getStorage("token")
     if (!token) {
         return {
@@ -344,26 +384,41 @@ export async function ProcessVideoMP4(videoID: string, resolution: string) {
             statusCode: 401,
         } as ErrorType
     }
-    const response = await axios({
-        method: "POST",
-        url: API_URL + "videos/" + videoID + "/process",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
-        },
-        data: {
-            Resolution: resolution,
-            IsAudio: false
+
+    const formData = new FormData()
+    formData.append("Resolution", resolution)
+    formData.append("IsAudio", "false")
+    if (cookiesFile) {
+        formData.append("cookies", cookiesFile)
+    }
+
+    try {
+        const response = await axios.post(
+            `${API_URL}videos/${videoID}/process`,
+            formData,
+            {
+                headers: {
+                    "Authorization": "Bearer " + token,
+                }
+            }
+        )
+
+        if (response.status !== 200) {
+            return {
+                error: response.data.error,
+                statusCode: response.status,
+            } as ErrorType
         }
-    })
-    if (response.status !== 200) {
+
+        return response.data
+    } catch (err: any) {
         return {
-            error: response.data.error,
-            statusCode: response.status,
+            error: err.response?.data?.error || "Unknown error",
+            statusCode: err.response?.status || 500,
         } as ErrorType
     }
-    return response.data
 }
+
 
 export async function GetVideoProcessingStatus(videoID: string) {
     const token = getStorage("token")
