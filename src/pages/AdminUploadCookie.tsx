@@ -172,7 +172,7 @@ export default function AdminUploadCookiePage() {
             <Dropzone
               accept={{ 'text/plain': ['.txt'] }}
               maxFiles={1}
-              maxSize={1024 * 50} // 50 KB
+              maxSize={1024 * 1024 * 2}  // 2 MB
               minSize={512}       // 0.5 KB
               onDrop={handleDrop}
               onError={(err: Error) =>
