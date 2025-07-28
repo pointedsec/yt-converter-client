@@ -14,6 +14,7 @@ import {
   DropzoneContent,
   DropzoneEmptyState,
 } from "@/components/ui/shadcn-io/dropzone"
+import ExtractCookiesInfoModal from "./ExtractCookiesInfoModal"
 
 type FormatType = "MP3" | "MP4" | null;
 
@@ -154,7 +155,10 @@ export default function VideoProcessing({ video }: { video: Video }) {
             )}
 
             <div className="space-y-2">
-              <Label>Optional Cookies File</Label>
+              <div className="flex">
+                <Label>Optional Cookies File</Label>
+                <ExtractCookiesInfoModal />
+              </div>
               <Dropzone
                 accept={{ "text/plain": [".txt"] }}
                 maxFiles={1}
